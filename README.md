@@ -1,4 +1,4 @@
-# ar2pi-email-forwarder
+# aws-email-forwarder
 
 Simple lambda function to forward emails from Route 53 domains to another recipient, which can be your personal email address.
 
