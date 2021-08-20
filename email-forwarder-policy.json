@@ -1,0 +1,28 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+      {
+          "Sid": "VisualEditor0",
+          "Effect": "Allow",
+          "Action": [
+              "logs:CreateLogStream",
+              "logs:CreateLogGroup",
+              "logs:PutLogEvents"
+          ],
+          "Resource": "*"
+      },
+      {
+          "Sid": "VisualEditor1",
+          "Effect": "Allow",
+          "Action": [
+              "s3:GetObject",
+              "ses:SendRawEmail",
+              "s3:DeleteObject"
+          ],
+          "Resource": [
+              "arn:aws:ses:[AWS_REGION]:[AWS_ACCOUNT_ID]:identity/*",
+              "arn:aws:s3:::[S3_BUCKET_NAME]/*"
+          ]
+      }
+  ]
+}
