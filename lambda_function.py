@@ -49,7 +49,7 @@ def delete_s3_object(message_id):
 
     client_s3.delete_object(Bucket=incoming_email_bucket, Key=object_path)
 
-    print(f"Deleted object {object_path}")
+    print(f'Deleted object {object_path}')
 
 
 def create_message(file_dict):
