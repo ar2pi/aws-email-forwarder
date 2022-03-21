@@ -70,10 +70,6 @@ def create_message(file_dict):
         + msg_body
     )
 
-    # The file name to use for the attached message. Uses regex to remove all
-    # non-alphanumeric characters, and appends a file extension.
-    filename = re.sub('[^0-9a-zA-Z]+', '_', subject) + '.eml'
-
     # Create a MIME container.
     msg = MIMEMultipart()
     # Create a MIME text part.
@@ -85,13 +81,6 @@ def create_message(file_dict):
     msg['Subject'] = subject
     msg['From'] = sender
     msg['To'] = recipient
-
-    # Create a new MIME object.
-    att = MIMEApplication(file_dict['file'], filename)
-    att.add_header('Content-Disposition', 'attachment', filename=filename)
-
-    # Attach the file object to the message.
-    msg.attach(att)
 
     message = {
         'Source': sender,
