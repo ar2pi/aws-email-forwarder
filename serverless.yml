@@ -4,8 +4,8 @@ frameworkVersion: '3'
 
 provider:
   name: aws
-  runtime: python3.10
+  runtime: python3.9
 
 functions:
-  hello:
+  handle_s3_event:
     handler: handler.handle_s3_event
