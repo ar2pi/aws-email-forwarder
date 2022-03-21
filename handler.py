@@ -112,7 +112,7 @@ def send_email(message):
 
     return output
 
-def lambda_handler(event, context):
+def handle_s3_event(event, context):
     # Get the unique ID of the message. This corresponds to the name of the file
     # in S3.
     message_id = event['Records'][0]['ses']['mail']['messageId']

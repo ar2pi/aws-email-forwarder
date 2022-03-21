@@ -1,0 +1,11 @@
+service: aws-email-forwarder
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.10
+
+functions:
+  hello:
+    handler: handler.handle_s3_event
