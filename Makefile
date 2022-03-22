@@ -5,26 +5,20 @@ SHELL := /bin/bash
 .PHONY: install
 install:
 	curl -o- -L https://slss.io/install | VERSION=3.8.0 bash
+	curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip
+	unzip awscliv2.zip
+	sudo ./aws/install
+	rm -rvf aws*
 	git config --local core.hooksPath hooks
 
-# .PHONY: build
-# build:
-# 	mkdocs build
+.PHONY: configure
+configure:
+	aws configure
 
-# .PHONY: serve
-# serve:
-# 	mkdocs serve
+.PHONY: deploy
+deploy:
+	sls deploy --stage prd --region us-east-1
 
-# .PHONY: deploy
-# deploy:
-# 	cd $(GH_PAGE) && mkdocs gh-deploy --config-file ../mkdocs.yml --remote-branch main
-
-# .PHONY: update-build-version
-# update-build-version:
-# 	git submodule update --remote --checkout
-# 	git add $(GH_PAGE)
-# 	git -c user.name="🤖" -c user.email="bot@ar2pi.net" commit --author "🤖 <bot@ar2pi.net>" -m "ci: update build version"
-
-# .PHONY: publish
-# publish: deploy update-build-version
-# 	git push --no-verify
+.PHONY: remove
+deploy:
+	sls remove
