@@ -1,0 +1,29 @@
+service: aws-email-forwarder
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.9
+
+package:
+  individually: true
+  patterns:
+    - commons/**
+    - '!handlers/**'
+
+functions:
+  handle-s3-event:
+    handler: handlers/handler.handle_s3_event
+    package:
+      patterns:
+        - 'handlers/handler.py'
+    memorySize: 128
+    timeout: 30
+    description: Handle S3 events to forward emails
+    environment:
+      MailRecipient: arthurpicerna@gmail.com
+      MailS3Bucket:	ar2pi-email-forwarder
+      MailS3Prefix:	emails
+      MailSender:	ar2pi-email-forwarder@ar2pi.net
+      Region:	us-east-1

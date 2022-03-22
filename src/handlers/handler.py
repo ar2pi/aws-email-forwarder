@@ -1,11 +1,10 @@
 import os
-import boto3
 import email
-import re
+import boto3
 from botocore.exceptions import ClientError
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from email.mime.application import MIMEApplication
+from commons.s3_utils import get_s3_object_path, get_s3_object, delete_s3_object
 
 region = os.environ['Region']
 sender = os.environ['MailSender']
@@ -13,27 +12,13 @@ recipient = os.environ['MailRecipient']
 incoming_email_bucket = os.environ['MailS3Bucket']
 incoming_email_prefix = os.environ['MailS3Prefix']
 
-client_s3 = boto3.client('s3')
 client_ses = boto3.client('ses', region)
 
-def get_s3_object_path(message_id):
-    object_path = message_id
-
-    if incoming_email_prefix:
-        object_path = (incoming_email_prefix + '/' + object_path)
-
-    object_http_path = (f'http://s3.console.aws.amazon.com/s3/object/{incoming_email_bucket}/{object_path}?region={region}')
-
-    return (
-        object_path,
-        object_http_path
-    )
-
 def get_message_from_s3(message_id):
-    object_path, object_http_path = get_s3_object_path(message_id)
+    object_path, object_http_path = get_s3_object_path(object=message_id, bucket=incoming_email_bucket, folder_prefix=incoming_email_prefix, region=region)
 
     # Get the email object from the S3 bucket.
-    object_s3 = client_s3.get_object(Bucket=incoming_email_bucket, Key=object_path)
+    object_s3 = get_s3_object(object_path=object_path, bucket=incoming_email_bucket)
     # Read the content of the message.
     file = object_s3['Body'].read()
 
@@ -43,13 +28,6 @@ def get_message_from_s3(message_id):
     }
 
     return file_dict
-
-def delete_s3_object(message_id):
-    object_path, *_ = get_s3_object_path(message_id)
-
-    client_s3.delete_object(Bucket=incoming_email_bucket, Key=object_path)
-
-    print(f'Deleted object {object_path}')
 
 
 def create_message(file_dict):
@@ -128,4 +106,4 @@ def handle_s3_event(event, context):
     result = send_email(message)
     print(result)
 
-    delete_s3_object(message_id)
+    delete_s3_object(object=message_id, bucket=incoming_email_bucket, folder_prefix=incoming_email_prefix, region=region)
