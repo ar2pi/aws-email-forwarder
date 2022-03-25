@@ -49,6 +49,7 @@ fmt:
 .PHONY: validate
 validate: fmt
 	@cd terraform && \
+	terraform get && \
 	terraform validate
 
 .PHONY: deploy
@@ -56,7 +57,6 @@ deploy: validate
 	@echo "Deploying $(env)/$(region)"
 	@cd terraform && \
 	terraform workspace select $(env)-$(region) && \
-	terraform get && \
 	terraform apply -auto-approve -var-file=env/$(env)/terraform.tfvars -var-file=env/$(env)/$(region).tfvars
 	@cd src && \
 	sls deploy --stage $(env) --region $(region)
