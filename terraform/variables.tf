@@ -17,13 +17,13 @@ variable "env" {
 variable "region" {
   description = "The region where AWS operations will take place."
   type        = string
-  default     = "us-east-1"
+  default     = "us-east-2"
 }
 
 variable "vpc_azs" {
   description = "A list of availability zones names or ids in the region"
   type        = list(string)
-  default     = ["us-east-1a"]
+  default     = ["us-east-2a", "us-east-2b", "us-east-2c"]
 }
 
 variable "vpc_cidr" {

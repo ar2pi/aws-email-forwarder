@@ -1,0 +1,35 @@
+service: sls
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.9
+
+package:
+  individually: true
+  patterns:
+    - common/**
+
+functions:
+  aws-email-forwader:
+    handler: functions/aws-email-forwarder/main.lambda_handler
+    name: ${self:service}-aws-email-forwader-${sls:stage}
+    memorySize: 128
+    timeout: 30
+    description: Forwards emails from a S3 bucket
+    environment:
+      MAIL_SENDER: aws-email-forwader@ar2pi.net
+      MAIL_RECIPIENT: arthurpicerna@gmail.com
+      MAIL_S3_BUCKET: aws-email-forwader
+      MAIL_S3_FOLDER: emails
+
+resources:
+  Resources:
+    SESLambdaInvokeAccess:
+      Type: 'AWS::Lambda::Permission'
+      Properties:
+        FunctionName: ${self:functions.aws-email-forwader.name}
+        Action: lambda:InvokeFunction
+        Principal: ses.amazonaws.com
+      DependsOn: AwsDashemailDashforwaderLambdaFunction

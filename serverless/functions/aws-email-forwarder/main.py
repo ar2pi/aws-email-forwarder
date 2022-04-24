@@ -4,18 +4,18 @@ import boto3
 from botocore.exceptions import ClientError
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from commons.s3_utils import get_s3_object_path, get_s3_object, delete_s3_object
+from common.utils import get_s3_object_path, get_s3_object, delete_s3_object
 
-region = os.environ['Region']
-sender = os.environ['MailSender']
-recipient = os.environ['MailRecipient']
-incoming_email_bucket = os.environ['MailS3Bucket']
-incoming_email_prefix = os.environ['MailS3Prefix']
+region = os.environ('AWS_REGION')
+sender = os.environ['MAIL_SENDER']
+recipient = os.environ['MAIL_RECIPIENT']
+incoming_email_bucket = os.environ['MAIL_S3_BUCKET']
+incoming_email_folder = os.environ['MAIL_S3_FOLDER']
 
 client_ses = boto3.client('ses', region)
 
 def get_message_from_s3(message_id):
-    object_path, object_http_path = get_s3_object_path(object=message_id, bucket=incoming_email_bucket, folder_prefix=incoming_email_prefix, region=region)
+    object_path, object_http_path = get_s3_object_path(object=message_id, bucket=incoming_email_bucket, folder_prefix=incoming_email_folder, region=region)
 
     # Get the email object from the S3 bucket.
     object_s3 = get_s3_object(object_path=object_path, bucket=incoming_email_bucket)
@@ -90,7 +90,7 @@ def send_email(message):
 
     return output
 
-def handle_s3_event(event, context):
+def lambda_handler(event, context):
     # Get the unique ID of the message. This corresponds to the name of the file
     # in S3.
     message_id = event['Records'][0]['ses']['mail']['messageId']
@@ -106,4 +106,4 @@ def handle_s3_event(event, context):
     result = send_email(message)
     print(result)
 
-    delete_s3_object(object=message_id, bucket=incoming_email_bucket, folder_prefix=incoming_email_prefix, region=region)
+    delete_s3_object(object=message_id, bucket=incoming_email_bucket, folder_prefix=incoming_email_folder, region=region)

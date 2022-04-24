@@ -6,12 +6,12 @@ output "region" {
   value = var.region
 }
 
-output "tfstate_bucket_arn" {
-  value = module.tfstate_backend.tfstate_bucket_arn
+output "tfstate_bucket" {
+  value = module.tfstate_backend.tfstate_bucket
 }
 
-output "tfstate_lock_table_arn" {
-  value = module.tfstate_backend.tfstate_lock_table_arn
+output "tfstate_lock_table" {
+  value = module.tfstate_backend.tfstate_lock_table
 }
 
 output "vpc_arn" {

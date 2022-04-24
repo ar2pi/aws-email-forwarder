@@ -11,6 +11,18 @@ Differences with this function being:
 - deletes message s3 object once it's been sent
 - uses python 3.9
 
+## Initialize project
+
+Run:
+```sh
+make init && make deploy-tf-state-backend
+# Edit terraform backend to include the newly created state backend
+make migrate-tf-state
+make deploy
+```
+
+---
+
 ## Serverless
 
 ### Deployment

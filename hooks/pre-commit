@@ -6,7 +6,7 @@ source $(dirname ${BASH_SOURCE[0]})/utils/all.sh
 
 out "Running pre-commit hook"
 
-if [[ $(git diff --name-status $current_branch "origin/$current_branch" -- ./terraform/) ]]; then
+if [[ $(git diff --name-status $current_branch $main_branch -- ./terraform/) ]]; then
     cd terraform
     out "Formatting terraform files"
     terraform fmt
