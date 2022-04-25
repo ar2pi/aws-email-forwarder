@@ -1,17 +1,18 @@
-locals {
-  vpc_name = "${var.service_name}-${var.env}"
-}
-
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name = local.vpc_name
-  cidr = var.cidr
-  azs  = var.azs
+  name = var.name
 
+  cidr            = var.cidr
+  azs             = var.azs
   private_subnets = var.private_subnets
   public_subnets  = var.public_subnets
 
-  enable_ipv6        = var.enable_ipv6
-  enable_nat_gateway = var.enable_nat_gateway
+  enable_nat_gateway     = var.enable_nat_gateway
+  single_nat_gateway     = var.single_nat_gateway
+  one_nat_gateway_per_az = var.one_nat_gateway_per_az
+
+  enable_dns_hostnames = true
+  enable_dns_support   = true
+  enable_ipv6          = true
 }
